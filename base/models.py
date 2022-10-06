@@ -24,6 +24,11 @@ class Room(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    # 순서대로 출력하기! (내림차순은 '-' 붙여주기)
+    class Meta:
+        ordering = ['-updated', '-created']
+
+
     def __str__(self):
         return self.name
 
