@@ -6,4 +6,12 @@
     <input type="text" name="q" placeholder="Search Rooms...">
 </form>
 
+{% if request.user.is_authenticated %}
+<p>{{ request.user }}님 반갑습니다! </p>
+<a href="{% url 'logout' %}">로그아웃</a>
+{% else %}
+<a href="{% url 'login' %}">로그인</a>
+{% endif %}
+
+
 <hr>
