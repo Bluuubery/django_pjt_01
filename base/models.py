@@ -1,4 +1,3 @@
-from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -20,7 +19,7 @@ class Room(models.Model):
     name = models.CharField(max_length=200)
     # null=True: database notnull, blank=True: 빈공백 금지
     description = models.TextField(null=True, blank=True)
-    # participants = 
+    participants = models.ManyToManyField(User, related_name='participants', blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 

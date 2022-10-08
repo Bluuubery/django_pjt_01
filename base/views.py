@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from .forms import RoomForm
 
 # Create your views here.
@@ -91,8 +91,24 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(pk=pk)
+    room_messages = room.message_set.all().order_by('-created')
+    participants = room.participants.all()
+
+
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user = request.user,
+            room = room,
+            body = request.POST.get('body')
+            )
+        room.participants.add(request.user)
+        # 포스트 방식이므로 새로고침 한번 해주기
+        return redirect('room', pk=room.id)
+
     context = {
         'room': room,
+        'room_messages': room_messages,
+        'participants': participants,
     }        
     return render(request, 'base/room.html', context)
 
@@ -149,3 +165,18 @@ def deleteRoom(request, pk):
         return redirect('home')
 
     return render(request, 'base/delete.html', { 'obj' : room })
+
+
+@login_required(login_url='login')
+def deleteMessage(request, pk):
+    message = Message.objects.get(pk=pk)
+    
+    # 유저 확인해주기
+    if request.user != message.user:
+        return HttpResponse('자신이 작성한 글만 삭제할 수 있습니다.')
+
+    if request.method == 'POST':
+        message.delete()
+        return redirect('home')
+
+    return render(request, 'base/delete.html', { 'obj' : message }) 
