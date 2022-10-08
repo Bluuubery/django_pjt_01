@@ -5,7 +5,7 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 3fr 1fr;
     }
 </style>
 
@@ -13,43 +13,19 @@
 
 <div class='home-container'>
     <div>
-        <h3>Browse Topic</h3>
-        <hr>
-        <div>
-            <a href="{% url 'home' %}">All</a>
-        </div>
-
-        {% for topic in topics %}
-            <div>
-                <a href="{% url 'home' %}?q={{ topic.name }}">{{ topic.name }}</a>
-            </div>
-        {% endfor %}
+        {% include 'base/topics_component.html' %}
     </div>
 
     <div>
         <h5>{{ room_count }} rooms available</h5>
         <a href="{% url 'create-room' %}">Create Room</a>
-        
-        <div>
-            {% for room in rooms %}
-            <div>
-                {% comment %} 자신이 개설한 방만 편집/삭제 보이기 {% endcomment %}
-                {% if request.user == room.host %}
-                <a href="{% url 'update-room' room.pk %}">Edit</a>
-                <a href="{% url 'delete-room' room.pk %}">Delete</a>
-                {% endif %}
-                <span>@{{ room.host.username }}</span>
-                <h5>{{ room.id }} -- <a href="{% url 'room' room.id %}">{{ room.name }}</a></h5>
-                <small>{{ room.topic.name }}</small>
-                <hr>
-            </div>       
-            {% endfor %}            
-        </div>
-
+        {% include 'base/feed_component.html' %}
     </div>
 
-
-
+    <div>
+        {% include 'base/activity_component.html' %}
+    </div>
+    
 </div>
 
 

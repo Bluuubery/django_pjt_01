@@ -78,13 +78,21 @@ def home(request):
     )
     # 나중에 필터로 상위 n개만 걸러내는 기능 추가하기
     topics = Topic.objects.all()
+
     # len도 가능한데 len보다 이게 나음
     room_count = rooms.count()
+
+    # 현재 보고 있는 방의 메세지만 피드에 출력
+    room_messages = Message.objects.filter(
+        Q(room__topic__name__icontains=q)
+    )
+
 
     context = {
         'rooms' : rooms,
         'topics': topics,
         'room_count': room_count,
+        'room_messages': room_messages,
     }
     return render(request, 'base/home.html', context)
 

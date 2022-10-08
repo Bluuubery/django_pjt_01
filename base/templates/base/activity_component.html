@@ -1,0 +1,17 @@
+<h3>Recent Activity</h3>
+<hr>
+{% for message in room_messages %}
+    <div>
+        <small>@{{ message.user }} {{ message.created|timesince }} 전</small>
+        <br>
+        <small>"{{ message.room }}"에 메세지를 남겼습니다!</small>
+        
+        {% comment %} models에서 앞 50자만 보이게 설정 {% endcomment %}
+        <p>{{ message }}</p>
+        {% if request.user == message.user %}
+        <a href="{% url 'delete-message' message.pk %}">삭제</a>
+        {% endif %}
+        <hr>
+    </div>
+
+{% endfor %}
