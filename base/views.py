@@ -121,6 +121,22 @@ def room(request, pk):
     return render(request, 'base/room.html', context)
 
 
+def userProfile(request, pk):
+    user = User.objects.get(pk=pk)
+    rooms = user.room_set.all()   
+    room_messages = user.message_set.all()
+    topics = Topic.objects.all()
+
+    context = {
+        'user': user, 
+        'rooms': rooms,
+        'room_messages': room_messages,
+        'topics': topics,
+    }
+    return render(request, 'base/profile.html', context)
+
+
+
 # 로그인이 되어있지 않으면 로그인 url로 보내기
 @login_required(login_url='login')
 def createRoom(request):

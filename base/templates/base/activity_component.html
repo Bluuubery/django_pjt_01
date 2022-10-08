@@ -2,7 +2,7 @@
 <hr>
 {% for message in room_messages %}
     <div>
-        <small>@{{ message.user }} {{ message.created|timesince }} 전</small>
+        <small><a href="{% url 'user-profile' message.user.id %}">@{{ message.user }}</a> {{ message.created|timesince }} 전</small>
         <br>
         <small>"{{ message.room }}"에 메세지를 남겼습니다!</small>
         
