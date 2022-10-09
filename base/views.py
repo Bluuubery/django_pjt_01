@@ -141,17 +141,25 @@ def userProfile(request, pk):
 @login_required(login_url='login')
 def createRoom(request):
     form = RoomForm()
+    topics = Topic.objects.all()
+
     if request.method == 'POST':
         # 터미널에서 출력하기
         # print(request.POST)
-        form = RoomForm(request.POST)
-        if form.is_valid():
-            room = form.save(commit=False)
-            room.host = request.user
-            room.save()
-            return redirect('home')
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+
+        Room.objects.create(
+            host=request.user,
+            topic=topic,
+            name=request.POST.get('name'),
+            description=request.POST.get('description'),
+
+        )
+        return redirect('home')
     context = {
-        'form' : form
+        'form' : form,
+        'topics': topics,
     }
     return render(request, 'base/room_form.html', context)
 
@@ -161,19 +169,26 @@ def updateRoom(request, pk):
     room = Room.objects.get(pk=pk)
     # 업데이트할 룸을 지정해주기
     form = RoomForm(instance=room)
+    topics = Topic.objects.all()
+
 
     # 유저 확인해주기
     if request.user != room.host:
         return HttpResponse('자신이 개설한 방만 편집할 수 있습니다.')
 
     if request.method == 'POST':
-        form = RoomForm(request.POST, instance=room)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+        room.name = request.POST.get('name')
+        room.topic = topic
+        room.description = request.POST.get('description')
+        room.save()
+        return redirect('home')
 
     context = {
-        'form' : form
+        'room': room,
+        'form' : form,
+        'topics': topics
     }
     return render(request, 'base/room_form.html', context)
 
