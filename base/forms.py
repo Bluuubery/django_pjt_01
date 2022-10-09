@@ -1,5 +1,8 @@
 from django.forms import ModelForm
 from .models import Room
+from django.contrib.auth.models import User
+
+
 
 class RoomForm(ModelForm):
     class Meta:
@@ -7,4 +10,8 @@ class RoomForm(ModelForm):
         fields = '__all__'
         exclude = ['host', 'participants']
         
-        # fields = ['name', 'contents',] 와 같이 특정 요소만을 불러올 수 잇음
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', ]

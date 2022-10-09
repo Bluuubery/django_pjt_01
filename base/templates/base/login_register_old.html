@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+
+{% comment %} 로그인 {% endcomment %}
+{% if page == 'login' %}
+<div>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label>Username:</label>
+        <input type="text" name="username" placeholder="Enter Username">
+        
+        <label>Password:</label>
+        <input type="password" name="password" placeholder="Enter Password">
+        <input type="submit" value="Login">
+    </form>
+    
+    <p>아직 회원이 아니신가요?</p>
+    <a href="{% url 'register' %}">회원 가입</a>
+</div>
+
+{% else %}
+{% comment %} 회원가입 {% endcomment %}
+<div>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="회원가입">
+    </form>
+    
+    <p>이미 회원이신가요?</p>
+    <a href="{% url 'login' %}">로그인</a>
+</div>
+
+{% endif %}
+
+
+{% endblock content %}

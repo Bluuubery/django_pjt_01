@@ -1,0 +1,13 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <p> 정말로 {{ obj }} 을/를 삭제하시겠습니까?? </p>
+    {% comment %} 특정 페이지가 아니라 직전 페이지로 보내기 {% endcomment %}
+    <a href="{{ request.META.HTTP_REFERER }}">취소</a>
+    <input type="submit" value="확인">
+</form>
+
+{% endblock content %}
