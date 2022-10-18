@@ -68,7 +68,6 @@ def home(request):
 
     topics = Topic.objects.all()[0:5]
 
-    # len도 가능한데 len보다 이게 나음
     room_count = rooms.count()
 
     # 현재 보고 있는 방의 메세지만 피드에 출력
@@ -93,7 +92,6 @@ def room(request, pk):
             user=request.user, room=room, body=request.POST.get("body")
         )
         room.participants.add(request.user)
-        # 포스트 방식이므로 새로고침 한번 해주기
         return redirect("room", pk=room.id)
 
     context = {
@@ -119,15 +117,12 @@ def userProfile(request, pk):
     return render(request, "base/profile.html", context)
 
 
-# 로그인이 되어있지 않으면 로그인 url로 보내기
 @login_required(login_url="login")
 def createRoom(request):
     form = RoomForm()
     topics = Topic.objects.all()
 
     if request.method == "POST":
-        # 터미널에서 출력하기
-        # print(request.POST)
         topic_name = request.POST.get("topic")
         topic, created = Topic.objects.get_or_create(name=topic_name)
 
